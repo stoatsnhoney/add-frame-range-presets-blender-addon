@@ -1,0 +1,21 @@
+schema_version = "1.0.0"
+
+id = "add_frame_range_presets"
+version = "1.0.0"
+name = "Add Frame Range Presets"
+tagline = "Adds a panel in Output Properties that lets you create preset frame ranges"
+maintainer = "Jay Friesen <jaymfriesen@outlook.com>"
+type = "add-on"
+
+website = "https://github.com/stoatsnhoney/limit-texture-size-menu-blender-addon"
+
+tags = ["Animation"]
+
+blender_version_min = "4.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+copyright = [
+   "2024 Jay Friesen",
+]
