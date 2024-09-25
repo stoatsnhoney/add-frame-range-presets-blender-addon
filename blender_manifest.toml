@@ -7,7 +7,7 @@ tagline = "Adds a panel in Output Properties that lets you create preset frame r
 maintainer = "Jay Friesen <jaymfriesen@outlook.com>"
 type = "add-on"
 
-website = "https://github.com/stoatsnhoney/limit-texture-size-menu-blender-addon"
+website = "https://github.com/stoatsnhoney/add-frame-range-presets-blender-addon"
 
 tags = ["Animation"]
 
