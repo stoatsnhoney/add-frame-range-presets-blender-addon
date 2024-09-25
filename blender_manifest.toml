@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 id = "add_frame_range_presets"
 version = "1.0.0"
 name = "Add Frame Range Presets"
-tagline = "Adds a panel in Output Properties that lets you create preset frame ranges"
+tagline = "Create preset frame ranges in just a click"
 maintainer = "Jay Friesen <jaymfriesen@outlook.com>"
 type = "add-on"
 
