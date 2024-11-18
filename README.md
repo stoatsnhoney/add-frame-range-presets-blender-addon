@@ -6,4 +6,6 @@ This 1.1 version is in Beta. This update features a complete redesign of the men
 ## Known Issues
 You may get an error when installing the add-on. I am still figuring out how to avoid this, but my testing indicates the add-on works properly upon closing and reopening Blender.
 
+If the add-on does not appear in the Output Properties tab, try deactivating then reactivating it.
+
 Also available on [Gumroad](http://stoatsnhoney.gumroad.com).
