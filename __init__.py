@@ -214,6 +214,9 @@ class MarkersToFrameRange(Operator):
         for i, marker in enumerate(markers):
             start_frame = marker.frame
             
+            # Use the marker's name as the preset's name
+            preset_name = marker.name
+            
             # Check if this is the last marker
             if i + 1 < len(markers):
                 end_frame = markers[i + 1].frame - 1  # Set end frame before the next marker
@@ -222,7 +225,7 @@ class MarkersToFrameRange(Operator):
 
             # Add a new preset with the marker information
             preset = context.scene.frame_range_presets.add()
-            preset.name = marker.name
+            preset.name = preset_name  # Retain marker name as preset name
             preset.start = start_frame
             preset.end = end_frame
 
