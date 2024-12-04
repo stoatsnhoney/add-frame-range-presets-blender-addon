@@ -19,8 +19,6 @@
 import bpy
 from bpy.types import Operator, Menu, Panel, PropertyGroup, AddonPreferences
 
-
-# Define a property group to store frame range preset data
 class FrameRangePreset(PropertyGroup):
     name: bpy.props.StringProperty(name="Preset Name")
     start: bpy.props.IntProperty(name="Start Frame")
@@ -28,10 +26,8 @@ class FrameRangePreset(PropertyGroup):
 
 
 class MyAddonPreferences(AddonPreferences):
-    # Define the bl_idname for the add-on preferences
     bl_idname = __name__
 
-    # Create a property for the default length of the last marker
     last_marker_frame_length: bpy.props.IntProperty(
         name="Last Marker Frame Length",
         default=100,
@@ -73,22 +69,19 @@ class AddPresetFrameRange(Operator):
         preset_name = context.scene.new_preset_name.strip()
 
         if preset_name:
-            # Check if preset name already exists
             for preset in context.scene.frame_range_presets:
                 if preset.name == preset_name:
                     self.report({'WARNING'}, f"Preset '{preset_name}' already exists.")
                     return {'CANCELLED'}
 
-            # Add new preset
             preset = context.scene.frame_range_presets.add()
             preset.name = preset_name
             preset.start = start
             preset.end = end
             
-            # Automatically select the new preset
             context.scene.selected_preset = preset.name
             
-            context.scene.new_preset_name = ""  # Clear input field
+            context.scene.new_preset_name = ""
             return {'FINISHED'}
         else:
             self.report({'WARNING'}, "Preset name cannot be empty.")
@@ -105,17 +98,14 @@ class OUTPUT_PT_frame_range_presets_panel(Panel):
     def draw(self, context):
         layout = self.layout
 
-        # Dropdown for selecting presets
         layout.prop(context.scene, "selected_preset", text="Select Preset")
         layout.prop(context.scene, "new_preset_name", text="Preset Name")
 
-        # Add and markers to frame range
         layout.operator("output.frame_range_preset_add", text="Save Current Frame Range", icon='ZOOM_IN')
         layout.operator("output.markers_to_frame_range", text="Markers to Frame Range")
 
         layout.separator()
 
-        # Reordered buttons: Edit Selected Preset first, then Delete Selected Preset
         layout.operator("output.edit_selected_preset", text="Edit Selected Preset")
         layout.operator("output.delete_frame_range_preset", text="Delete Selected Preset")
 
@@ -139,8 +129,7 @@ class EditSelectedPreset(Operator):
     bl_label = "Edit Selected Preset"
     bl_options = {'REGISTER', 'UNDO'}
 
-    # Properties for editing the selected preset
-    selected_preset_name: bpy.props.StringProperty()  # Holds the name of the currently selected preset
+    selected_preset_name: bpy.props.StringProperty()
     new_name: bpy.props.StringProperty(name="Preset Name")
     start_frame: bpy.props.IntProperty(name="Start Frame", default=1)
     end_frame: bpy.props.IntProperty(name="End Frame", default=1)
@@ -171,7 +160,7 @@ class EditSelectedPreset(Operator):
             preset.start = self.start_frame
             preset.end = self.end_frame
             
-            context.scene.selected_preset = self.new_name  # Update selected preset name
+            context.scene.selected_preset = self.new_name
             return {'FINISHED'}
         return {'CANCELLED'}
 
@@ -185,20 +174,17 @@ class DeleteFrameRangePreset(Operator):
         selected_name = context.scene.selected_preset
         presets = context.scene.frame_range_presets
 
-        # Find and remove the selected preset by name
         for index, preset in enumerate(presets):
             if preset.name == selected_name:
-                presets.remove(index)  # Remove the preset from the collection by index
+                presets.remove(index)
                 break
         else:
             self.report({'WARNING'}, "No preset selected to delete.")
             return {'CANCELLED'}
 
-        # If any presets remain, update selected preset; otherwise, leave current frame range unchanged
         if presets:
-            context.scene.selected_preset = presets[0].name  # Select the first preset
+            context.scene.selected_preset = presets[0].name
         else:
-            # Leave the selected_preset unchanged if no presets are left
             pass
 
         return {'FINISHED'}
@@ -212,37 +198,30 @@ class MarkersToFrameRange(Operator):
     def execute(self, context):
         markers = context.scene.timeline_markers
 
-        # Get the user-defined length for the last marker from preferences
         frame_length = context.preferences.addons[__name__].preferences.last_marker_frame_length
 
-        # Ensure that we process the markers if at least one exists
         if not markers:
             self.report({'WARNING'}, "No markers found in the timeline.")
             return {'CANCELLED'}
 
-        # Iterate through the markers and create presets
         for i, marker in enumerate(markers):
             start_frame = marker.frame
             
-            # Check if the marker is camera bound
             camera_name = ""
             if marker.camera:
-                camera_name = marker.camera.name  # Get the name of the linked camera
+                camera_name = marker.camera.name
             else:
-                camera_name = marker.name  # Fall back to the marker's name if no camera is linked
+                camera_name = marker.name
             
-            # Use the camera's name as the preset's name if available
             preset_name = camera_name
             
-            # Check if this is the last marker
             if i + 1 < len(markers):
-                end_frame = markers[i + 1].frame - 1  # Set end frame before the next marker
+                end_frame = markers[i + 1].frame - 1
             else:
-                end_frame = start_frame + frame_length  # Use user-defined length of the last marker
+                end_frame = start_frame + frame_length
 
-            # Add a new preset with the marker information
             preset = context.scene.frame_range_presets.add()
-            preset.name = preset_name  # Set preset name based on linked camera or marker name
+            preset.name = preset_name
             preset.start = start_frame
             preset.end = end_frame
 
